@@ -21,7 +21,7 @@ def python_if_else(n):
             # odd
             print("Weird")
     else:
-        print("input does not satisfy constraint")
+        print("err: input does not satisfy constraints")
 
 
 if __name__ == '__main__':
