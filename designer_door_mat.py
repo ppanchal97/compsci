@@ -26,9 +26,7 @@ def print_door_mat(n, m):
 
 
 if __name__ == '__main__':
-    n, m = input().split()
-    n = int(n)
-    m = int(m)
+    n, m = map(int,input().split())
     if (n > 5 and n < 101) and (n % 2 != 0 and n > 0):
         if (m > 15 and m < 303) and (m == n * 3):
             print_door_mat(n, m)
