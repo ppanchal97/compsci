@@ -99,10 +99,21 @@ def compPlayHand(hand, wordList, n):
     print('Total score: ' + str(totalScore) + ' points.')
 
 
+def takeTurn(hand, wordList):
+    p = input(
+        "Enter u to have yourself play, c to have the computer play: ")
+    if p == "u":
+        playHand(hand, wordList, HAND_SIZE)
+    elif p == "c":
+        compPlayHand(hand, wordList, HAND_SIZE)
+
+
 #
 # Problem #6: Playing a game
 #
 #
+
+
 def playGame(wordList):
     """
     Allow the user to play an arbitrary number of hands.
@@ -135,31 +146,16 @@ def playGame(wordList):
             "Enter n to deal a new hand, r to replay the last hand, or e to end game: ")
         # branch depending on input
         if i == 'n':
-            # ask if computer should play
-            p = input(
-                "Enter u to have yourself play, c to have the computer play: ")
-            if p == "u":
-                hand = dealHand(HAND_SIZE)
-                last_hand = hand
-                playHand(hand, wordList, HAND_SIZE)
-            elif p == "c":
-                hand = dealHand(HAND_SIZE)
-                last_hand = hand
-                compPlayHand(hand, wordList, HAND_SIZE)
+            hand = dealHand(HAND_SIZE)
+            last_hand = hand
+            takeTurn(hand, wordList)
         elif i == 'e':
             break
-        elif i == 'r' and len(last_hand.keys()) > 0:
-            # ask if computer should play
-            p = input(
-                "Enter u to have yourself play, c to have the computer play: ")
-            if p == "u":
-                hand = last_hand
-                playHand(hand, wordList, HAND_SIZE)
-            elif p == "c":
-                hand = last_hand
-                compPlayHand(hand, wordList, HAND_SIZE)
-        elif i == 'r' and len(last_hand.keys()) == 0:
-            print("You have not played a hand yet. Please play a new hand first!")
+        elif i == 'r':
+            if len(last_hand.keys()) > 0:
+                takeTurn(last_hand, wordList)
+            else:
+                print("You have not played a hand yet. Please play a new hand first!")
         else:
             print("Invalid command.")
 
