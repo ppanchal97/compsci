@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
+void validate_card(char *card_number);
 void print_card_type(char *card_number);
 
+/*
+- C implementation of Luhn's algorithm for checking
+... validity of a credit card number.
+*/
 int main(void)
 {
     long ccn;
@@ -10,7 +15,11 @@ int main(void)
     scanf("%ld", &ccn);
     char card_number[256];
     sprintf(card_number, "%ld", ccn);
+    validate_card(card_number);
+}
 
+void validate_card(char *card_number)
+{
     int step_1_digit_product = 0;
     int step_2_digit_product = 0;
 
@@ -21,11 +30,7 @@ int main(void)
         int x = card_number[i] - '0';
         x *= 2;
 
-        if (x == 10)
-        {
-            step_1_digit_product += 1;
-        }
-        else if (x > 10)
+        if (x >= 10)
         {
             step_1_digit_product += (x - 10 + 1);
         }
@@ -70,7 +75,9 @@ void print_card_type(char *card_number)
     {
         printf("MASTERCARD\n");
     }
-    else {
+    else
+    {
+        // Unrecognized brand, but valid card
         printf("INVALID\n");
     }
 }
