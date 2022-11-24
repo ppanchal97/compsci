@@ -109,3 +109,16 @@ To support command line arguments, the main method must accept the following:
 - Each error code corresponds to a type of error that has happened
 - On the web, HTTP error codes help programmers figure out what went wrong
 - Return 0 in the success case, else explicitly catch and return error messages
+
+**Program Input**
+- must use `fgets()` when need to accept string as a command line argument. Using `scanf()` suffices for characters, however fails after it encounters first space or empty character.
+e.g.,
+```
+    int text_buffer_size = 1024;
+    char *plaintext = malloc(text_buffer_size);
+    printf("plaintext: ");
+    fgets(plaintext, text_buffer_size, stdin);
+```
+
+### Problem Solving Method
+1. Identify the core algorithm. I.e., what ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y. 
