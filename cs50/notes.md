@@ -221,3 +221,13 @@ Can be represented as Ω(n^2).
 - Recursion is calling a function within itself on a smaller and smaller problem space.
 - A recursive function defines a base case and a recursive step. The base case is needed to exit so a function does not run forever. The recursive step calls the function again with some new parameter.
 - The functions keep getting pushed to the call stack until the base case is triggered, then they are run one by one from last added to first and are popped off the stack in this order.
+
+**2D Arrays**
+- Contain arrays inside of an array.
+- Useful data structure to group data that can also be iterated on.
+- Requires nested for loops for iteration.
+
+```
+
+
+```
