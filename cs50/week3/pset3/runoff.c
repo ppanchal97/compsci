@@ -131,7 +131,6 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-// Record preference if vote is valid
 bool vote(int voter, int rank, char *name)
 {
     // find index of candidate and update preferences array
@@ -139,6 +138,12 @@ bool vote(int voter, int rank, char *name)
     {
         if (strcmp(candidates[i].name, name) == 0)
         {
+            // check if candidate has been eliminated
+            if (candidates[i].eliminated)
+            {
+                return false;
+            }
+
             preferences[voter][rank] = i;
             return true;
         }

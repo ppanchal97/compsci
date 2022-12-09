@@ -1,5 +1,9 @@
 ## CS50 Course Notes
 
+### The Problem Solving Method
+1. Identify the core algorithm. I.e., what ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.
+2. Write down and populate data structures on paper.
+
 ### Week 1 - Lecture 1 - C
 
 **General Knowledge**
@@ -118,9 +122,6 @@ e.g.,
     fgets(plaintext, text_buffer_size, stdin);
 ```
 
-### The Problem Solving Method
-1. Identify the core algorithm. I.e., what ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.
-
 
 **Algorithms**
 1. Checking for duplicates in a string using double for-loops.
@@ -226,8 +227,3 @@ Can be represented as Ω(n^2).
 - Contain arrays inside of an array.
 - Useful data structure to group data that can also be iterated on.
 - Requires nested for loops for iteration.
-
-```
-
-
-```
