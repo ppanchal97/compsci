@@ -6,11 +6,13 @@
 // Max number of candidates
 #define MAX 9
 
+int visited_nodes[MAX];
+void reset_visited_nodes();
+
 // preferences[i][j] is number of voters who prefer i over j
 int preferences[MAX][MAX];
 
 // locked[i][j] means i is locked in over j
-
 bool is_graph_looped = false;
 
 bool locked[MAX][MAX];
@@ -70,6 +72,13 @@ int main(int argc, char *argv[])
             locked[i][j] = false;
         }
     }
+
+    // clear visited nodes
+    for (int i = 0; i < MAX; i++)
+    {
+        visited_nodes[i] = 0;
+    }
+    
 
     pair_count = 0;
 
@@ -232,22 +241,58 @@ void sort_pairs(void)
     return;
 }
 
+bool is_visited_node(int node)
+{
+    for (int i = 0; i < MAX; i++)
+    {
+        if (visited_nodes[node] == 1)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+void reset_visited_nodes()
+{
+    for (int i = 0; i < MAX; i++)
+    {
+        visited_nodes[i] = 0;
+    }
+    
+    return;
+}
+
+// starting from given node, for all nodes that given node is connected to, print the nodes they are connected to
 void search_graph(int starting_node)
 {
-    // starting from given node, for all nodes that given node is connected to, print the nodes they are connected to
+    if (is_visited_node(starting_node) == true)
+    {
+        printf("loop\n");
+        is_graph_looped = true;
+        return;
+    }
+    
     for (int i = 0; i < pair_count; i++)
     {
         if (temporary_pairs_graph[i].start_node == starting_node)
         {
+            // if that particular node points back to the first node, it's a loop
             if (temporary_pairs_graph[i].end_node == temporary_pairs_graph[0].start_node)
             {
                 printf("loop\n");
                 is_graph_looped = true;
-                return;
+                break;
             }
+            
 
             // print node being pointed to
             printf("%i -> %i\n", temporary_pairs_graph[i].start_node, temporary_pairs_graph[i].end_node);
+            
+            // set nodes visited
+            visited_nodes[starting_node] = 1;
+            printf("f(%i)\n", starting_node);
 
             // recursively search from the end node
             search_graph(temporary_pairs_graph[i].end_node);
@@ -264,15 +309,21 @@ void lock_pairs(void)
     {
         // add pair to graph
         temporary_pairs_graph[i] = pairs[i];
+
+        // reset visited nodes;
+        reset_visited_nodes();
+
         // search to see if looped. Always start from first value.
         search_graph(pairs[0].start_node);
         if (is_graph_looped != true)
         {
             // lock in the pair 
             printf("locked %i -> %i\n", pairs[i].start_node, pairs[i].end_node);
+            locked[pairs[i].start_node][pairs[i].end_node] = true;
         }
         else {
             // remove last added value, reset graph loop and continue to add pairs and search
+            printf("skipped adding pair {%i, %i}\n", temporary_pairs_graph[i].start_node, temporary_pairs_graph[i].end_node);
             temporary_pairs_graph[i].start_node = -1;
             temporary_pairs_graph[i].end_node = -1;
             is_graph_looped = false;
@@ -286,14 +337,26 @@ void lock_pairs(void)
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    // source of graph is node that does not have any pointers to it.
+    int child_nodes[pair_count];
+
+    // set position in child_nodes of the nodes that have pointers to -1;
+    for (int i = 0; i < pair_count; i++)
+    {
+        int end_node = temporary_pairs_graph[i].end_node;
+        child_nodes[temporary_pairs_graph[i].end_node] = -1;
+    }
+
+    // iterate over child_nodes and get position of node that != -1, then print name;
+    for (int i = 0; i < pair_count; i++)
+    {
+        if (child_nodes[i] != -1)
+        {
+            // head node, print position and candidate name
+            printf("%i\n", i);
+            printf("%s\n", candidates[i]);
+        }
+    }
+    
     return;
 }
-
-/*
-Issues
-- graph search needs to happen for all pairs in the pairs array,
-not just 0. If pairs = {{0,1}, {2,3}}, search will never be carried out
-for the second pair as 0 -> 1, then no pair starts with 1 so search will stop.
-IT WORKS WHEN START IS 0;
-*/
