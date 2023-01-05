@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         // Query for each rank
         for (int j = 0; j < candidate_count; j++)
         {
-            char *name = malloc(126);
+            char *name = malloc(126 * sizeof(char));
             printf("Rank %i: ", j + 1);
             scanf("%s", name);
 

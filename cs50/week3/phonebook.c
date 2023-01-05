@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    char *s = malloc(20);
+    char *s = malloc(20 * sizeof(char));
     const int strings_memory = 128;
 
     printf("Name to lookup: ");
@@ -18,9 +18,16 @@ int main(void)
         if (strcmp(s, names[i]) == 0)
         {
             printf("Phone number: %s\n", phone_numbers[i]);
+
+            free(s);
+
             return 0;
         }
     }
+
     printf("Contact not found\n");
+
+    free(s);
+
     return 1;
 }

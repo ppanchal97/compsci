@@ -14,7 +14,7 @@ typedef struct
 
 int main(void)
 {
-    char *lookup_name = malloc(20);
+    char *lookup_name = malloc(20 * sizeof(char));
     const int strings_memory = 128;
 
     printf("Name to lookup: ");
@@ -40,9 +40,15 @@ int main(void)
         if (strcmp(lookup_name, phonebook[i].name) == 0)
         {
             printf("Phone number: %s\n", phonebook[i].phone_number);
+
+            free(lookup_name);
+
             return 0;
         }
     }
     printf("Contact '%s' not found\n", lookup_name);
+
+    free(lookup_name);
+    
     return 1;
 }

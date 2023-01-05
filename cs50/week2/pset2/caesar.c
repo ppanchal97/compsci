@@ -21,12 +21,14 @@ int main(int argc, char *argv[])
     else
     {
         key = atoi(argv[1]);
-        int text_buffer_size = 1024;
+        int text_buffer_size = 1024 * sizeof(char);
         char *plaintext = malloc(text_buffer_size);
         printf("plaintext: ");
         fgets(plaintext, text_buffer_size, stdin);
 
         caesar(plaintext, key % 26);
+
+        free(plaintext);
 
         return 0;
     }

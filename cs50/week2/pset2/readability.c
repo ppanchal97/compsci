@@ -15,7 +15,7 @@ int grade_text(char *text);
 */
 int main(int argc, char *argv[])
 {
-    int text_buffer_size = 1024;
+    int text_buffer_size = 1024 * sizeof(char);
     char *text = malloc(text_buffer_size);
     printf("Text: ");
     fgets(text, text_buffer_size, stdin);
@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
     {
         printf("Grade %i\n", grade);
     }
+
+    free(text);
 
     return 0;
 }

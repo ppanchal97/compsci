@@ -488,6 +488,13 @@ int collatz(int n)
 ### General Knowledge
 - Strings are implemented similarly to arrays in a contiguous block of memory.
 - In C, double quotes automatically insert the `\0` character at the end of a string.
+- Any values that are not initialized explicitly will be initialized with garbage values.
+- Passing any variables into a function gives it local copies and not the actual variables in memory - this is "pass by value". To use the underlying memory, a function needs the memory address, then use dereferencing to modify the underlying value.
+
+### Garbage Values
+- Values left in memory once a program has finished running.
+- Uninitialized variables have garbage values.
+- When a program allocates memory and then subsequently deallocates it, the memory is not necessarily erased the data that was previously stored in it. Instead, the memory is simply marked as available for reuse by the operating system. This means that the data that was previously stored in the memory is still present, at least until the operating system reuses the memory and overwrites the data with new information. If a program subsequently allocates the same memory again and accesses the data that was previously stored in it, it is possible that the program could retrieve sensitive information that was not properly erased or overwritten. This could happen, for example, if the program is not designed to properly initialize or erase the memory before using it. To prevent sensitive information from being accessed in this way, it is important to properly erase or overwrite the data in memory when it is no longer needed, and to allocate and initialize memory correctly when it is needed. This can help to ensure that sensitive information is not inadvertently accessed by other programs or processes.
 
 ### Hexadecimal
 - Hexadecimal notation makes it easy to read large numbers - helpful in the case of reading memory addresses or bytes.
@@ -498,6 +505,7 @@ int collatz(int n)
 - Memory addresses are usually denoted using the hexadecimal system. These are denoted using the `0x` prefix. 
 
 ### Memory & Pointers
+- **A pointer is just an address in memory.**
 - Each "cell" in the abstract memory grid has an address e.g., `0x1001c4f9f` the `0x` prefix denotes that a number is a memory address.
 - The `&` operator refers to an address in memory e.g., `0x1001c4f9a`.
 - A pointer simply points to an address in memory. Is declared using the `*` operator and has a type e.g., `int *p;` creates an integer pointer. The `*` operator does the opposite of `&`, it looks inside the memory.
@@ -554,3 +562,16 @@ int main(void)
 
 ### Strings
 - Declaring a string by using `char *str = "abc";` returns the memory address of the first character of the string. The data in the first character can be accessed through dereferencing such as `printf("%c\n", *str);`.
+
+### Valgrind
+- Detects memory leaks.
+
+### Heap / Stack
+- Memory is divided up into 1. machine code, 2. global variables, 3. heap, 4. stack.
+- **Heap** is user allocated memory e.g., through `malloc();`. Is prone to **heap overflow** - when the program writes more memory on the heap that is allocated for the heap - the program can then write beyond the bounds of the heap memory.
+- **Stack** stores function variables and arguments. Is prone to **stack overflow** - functions taking up too much memory and not returning.
+- Recursion can cause a **stack overflow** as each recursive step adds an additional stack frame with it's own variables and arguments. In case of iteration, only one stack frame is required. Recursion may not always consume more stack space than iteration - depends on implementation of the programming language and the underlying compiler.
+
+
+### Null pointer exception
+- An error that occurs when a program attempts to dereference a null pointer. This can happen if the program tries to access memory that has not been allocated, or if it tries to follow a pointer that has not been initialized.

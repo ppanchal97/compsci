@@ -17,9 +17,16 @@ int main(void)
         if (strcmp(s, strings[i]) == 0)
         {
             printf("Found\n");
+
+            free(s);
+
             return 0;
         }
     }
+
     printf("Not found\n");
+
+    free(s);
+
     return 1;
 }

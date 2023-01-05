@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     // Loop over all voters
     for (int i = 0; i < voter_count; i++)
     {
-        char *name = malloc(128);
+        char *name = malloc(128 * sizeof(char));
         printf("Vote: ");
         scanf("%s", name);
 
