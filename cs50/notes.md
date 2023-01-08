@@ -572,6 +572,77 @@ int main(void)
 - **Stack** stores function variables and arguments. Is prone to **stack overflow** - functions taking up too much memory and not returning.
 - Recursion can cause a **stack overflow** as each recursive step adds an additional stack frame with it's own variables and arguments. In case of iteration, only one stack frame is required. Recursion may not always consume more stack space than iteration - depends on implementation of the programming language and the underlying compiler.
 
-
 ### Null pointer exception
 - An error that occurs when a program attempts to dereference a null pointer. This can happen if the program tries to access memory that has not been allocated, or if it tries to follow a pointer that has not been initialized.
+
+
+## Files
+- File formats are denoted by their extension e.g., `.wav`, `.jpeg` etc. File formats define the structure of the file. E.g., .wav file format means that every .wav file will have a 44 byte header such as
+```
+typedef uint8_t   BYTE;
+typedef uint16_t  WORD;
+typedef uint32_t  DWORD;
+
+typedef struct
+{
+    BYTE   chunkID[4];
+    DWORD  chunkSize;
+    BYTE   format[4];
+    BYTE   subchunk1ID[4];
+    DWORD  subchunk1Size;
+    WORD   audioFormat;
+    WORD   numChannels;
+    DWORD  sampleRate;
+    DWORD  byteRate;
+    WORD   blockAlign;
+    WORD   bitsPerSample;
+    BYTE   subchunk2ID[4];
+    DWORD  subchunk2Size;
+} __attribute__((__packed__))
+WAVHEADER;
+```
+
+- Headers define metadata - data about the data that begins immediately after the header ends. The header contains all the information for manipulating the file.
+
+- A file then contains n number of blocks that store the actual file data. These are read into memory one at a time.
+
+### File operations
+1. Each file must be opened using `fopen()` e.g.,
+```
+FILE *inptr = fopen(file_name, "r");
+if (inptr == NULL)
+{
+    fclose(inptr);
+    printf("err: could not open file");
+    return EXIT_FAILURE;
+}
+```
+
+*inptr refers to the address that is currently being read. This can be manipulated with `fseek()` if the *inptr needs to be manually controlled.
+
+
+2. The header of a file is at the start. If the header's data structure and types are known, it can be read into memory using `fread()` e.g.,
+```
+WAVHEADER wav_header;
+fread(&wav_header, sizeof(WAVHEADER), 1, inptr);
+```
+Because `*inptr`'s value is still the start of the file, fread() will read the next x bytes where the header data is. **Once the header has been read into memory, *inptr will advance to the xth byte where the header ends and the file data starts**. Can use a loop to iterate over the next n *blocks* of file content.
+
+2. To read file content blocks, memory needs to be allocated for each block. Note that blocks are usually read one at a time unless a separate data structure exists that is simultaneously storing blocks for comparison etc.
+```
+int BLOCK_SIZE = 512;
+
+BYTE buffer[BLOCK_SIZE];
+
+// Read 512 blocks into buffer until reaching end of card
+while (fread(buffer, 1, BLOCK_SIZE, inptr) == BLOCK_SIZE)
+{
+    // do something with each block
+}
+```
+
+3. All file pointers need to be closed once data has been written to a file or at the end of the program. This allows the OS to release the memory for holding the file. E.g.,
+```
+fclose(outptr);
+fclose(inptr);
+```

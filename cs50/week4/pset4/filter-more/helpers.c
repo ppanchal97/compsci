@@ -209,26 +209,6 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
-/*
-
-1. For each red, green, blue value for surrounding 9 pixels in 3x3 grid,
-multiply by the corresponding value in the Gx kernel. Then take sum of the resulting values.
-
-2. For each red, green, blue value for surrounding 9 pixels in 3x3 grid,
-multiply by the corresponding value in the Gy kernel. Then take sum of the resulting values.
-
-3. Apply Sobel operator to Gy and Gx math.root(Gx^2 + Gy^2).
-
-4. Round value to nearest int and cap at 255.
-
-
-Edges
-1. Check if going to access beyond the edges:
-    - for j: if j + 1 > width +1 || j - 1 < 0;
-    - for i: if i - 1 < 0 || i + 1 > height - 1;
-    - if true - infer the value of that pixel as 255 255 255 (black), then multiply by the corresponding matrix value
-
-*/
 int get_sobel_value(int color, int direction, int height, int width, int i, int j, int hex, RGBTRIPLE image_copy[height][width])
 {
     int kernel_sum = 0;
@@ -262,46 +242,176 @@ int get_sobel_value(int color, int direction, int height, int width, int i, int 
         kernel[2][2] = 1;
     }
 
-    int is_edge = (i == 0 || i == height - 1) ? 1 : (j == 0 || j == width - 1) ? 1 : 0;
-    
-
     switch (color)
     {
     case 0:
         // red
-        kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtRed;
         kernel_sum += kernel[1][1] * image_copy[i][j].rgbtRed;
-        kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtRed;
-        kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtRed;
-        kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtRed;
-        kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtRed;
-        kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtRed;
-        kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtRed;
-        kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtRed;
+
+        if (j - 1 >= 0)
+        {
+            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtRed;
+        }
+        else
+        {
+            kernel_sum += kernel[1][0] * 0;
+        }
+
+        if (j + 1 <= width)
+        {
+            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtRed;
+        }
+        else
+        {
+            kernel_sum += kernel[1][2] * 0;
+        }
+
+        if (i - 1 >= 0 && j - 1 >= 0)
+        {
+            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtRed;
+        }
+        else
+        {
+            kernel_sum += kernel[0][0] * 0;
+        }
+
+        if (i - 1 >= 0)
+        {
+            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtRed;
+        }
+
+        if (i - 1 >= 0 && j + 1 <= width)
+        {
+            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtRed;
+        }
+
+        if (i + 1 <= height && j - 1 >= 0)
+        {
+            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtRed;
+        }
+
+        if (i + 1 <= height)
+        {
+            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtRed;
+        }
+
+        if (i + 1 <= height && j + 1 <= width)
+        {
+            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtRed;
+        }
+
         break;
     case 1:
         // green
-        kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtGreen;
-        kernel_sum += kernel[1][1] * image_copy[i][j].rgbtGreen;
-        kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtGreen;
-        kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtGreen;
-        kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtGreen;
-        kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtGreen;
-        kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtGreen;
-        kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtGreen;
-        kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtGreen;
+     kernel_sum += kernel[1][1] * image_copy[i][j].rgbtGreen;
+        
+        if (j - 1 >= 0)
+        {
+            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtGreen;
+        }
+        else
+        {
+            kernel_sum += kernel[1][0] * 0;
+        }
+
+        if (j + 1 <= width)
+        {
+            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtGreen;
+        }
+        else
+        {
+            kernel_sum += kernel[1][2] * 0;
+        }
+
+        if (i - 1 >= 0 && j - 1 >= 0)
+        {
+            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtGreen;
+        }
+        else
+        {
+            kernel_sum += kernel[0][0] * 0;
+        }
+
+        if (i - 1 >= 0)
+        {
+            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtGreen;
+        }
+
+        if (i - 1 >= 0 && j + 1 <= width)
+        {
+            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtGreen;
+        }
+
+        if (i + 1 <= height && j - 1 >= 0)
+        {
+            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtGreen;
+        }
+
+        if (i + 1 <= height)
+        {
+            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtGreen;
+        }
+
+        if (i + 1 <= height && j + 1 <= width)
+        {
+            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtGreen;
+        }
         break;
     case 2:
         // blue
-        kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtBlue;
-        kernel_sum += kernel[1][1] * image_copy[i][j].rgbtBlue;
-        kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtBlue;
-        kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtBlue;
-        kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtBlue;
-        kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtBlue;
-        kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtBlue;
-        kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtBlue;
-        kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtBlue;
+ kernel_sum += kernel[1][1] * image_copy[i][j].rgbtBlue;
+        
+        if (j - 1 >= 0)
+        {
+            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtBlue;
+        }
+        else
+        {
+            kernel_sum += kernel[1][0] * 0;
+        }
+
+        if (j + 1 <= width)
+        {
+            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtBlue;
+        }
+        else
+        {
+            kernel_sum += kernel[1][2] * 0;
+        }
+
+        if (i - 1 >= 0 && j - 1 >= 0)
+        {
+            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtBlue;
+        }
+        else
+        {
+            kernel_sum += kernel[0][0] * 0;
+        }
+
+        if (i - 1 >= 0)
+        {
+            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtBlue;
+        }
+
+        if (i - 1 >= 0 && j + 1 <= width)
+        {
+            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtBlue;
+        }
+
+        if (i + 1 <= height && j - 1 >= 0)
+        {
+            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtBlue;
+        }
+
+        if (i + 1 <= height)
+        {
+            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtBlue;
+        }
+
+        if (i + 1 <= height && j + 1 <= width)
+        {
+            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtBlue;
+        }
         break;
 
     default:
