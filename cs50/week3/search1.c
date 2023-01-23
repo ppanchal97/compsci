@@ -1,32 +1,59 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+int linear_search(int size, char chars[size], char target);
+
 int main(void)
 {
-    char *s = malloc(20);
-    const int strings_memory = 20;
+    char chars[5];
+    
+    chars[0] = 'a';
+    chars[1] = 'b';
+    chars[2] = 'c';
+    chars[3] = 'd';
+    chars[4] = 'e';
 
-    printf("String: ");
-    scanf("%s", s);
+    // take input from user
+    char input_char;
 
-    char *strings[strings_memory] = {"aa", "bb", "cc", "dd", "ee"};
-
-    for (int i = 0; i < 5; i++)
+    input_char = fgetc(stdin);
+    if (ferror(stdin))
     {
-        if (strcmp(s, strings[i]) == 0)
+        printf("err: %s\n", strerror(errno));
+        return -1;
+    }
+
+    clearerr(stdin);
+
+    // search
+    if (linear_search(5, chars, input_char) == 1)
+    {
+        printf("found\n");
+    }
+    else
+    {
+        printf("not found\n");
+    }
+
+    return 0;
+}
+
+int linear_search(int size, char chars[size], char target)
+{
+    if (size == 0 || chars == NULL)
+    {
+        return -1;
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        if (chars[i] == target)
         {
-            printf("Found\n");
-
-            free(s);
-
-            return 0;
+            return 1;
         }
     }
 
-    printf("Not found\n");
-
-    free(s);
-
-    return 1;
+    return 0;
 }

@@ -1,5 +1,11 @@
 ## CS50 Course Notes
 
+
+### C Specific Language Features
+- Strings (char *str;) or arrays (int nums[5];) are NOT assignable. The values have to be copied to the other variable using `strcpy()` or `memcpy()`.
+- The `->` operator is an abstraction for a pointer to a variable in a struct e.g., `node->int = 1;` == `*(node).int = 1;`.
+- ALL arguments passed into functions are copied by value, unless the pointer is passed as an argument or the data type of the argument is an array or a string.
+
 ### The Problem Solving Method
 1. Identify the core algorithm. e.g., ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.
 2. Write down and populate data structures on paper.
@@ -23,8 +29,8 @@
 - The `main` function and custom data types defined using `typedef` are normally declared at top of the file for better readability.
 
 **Loops**
+- For loops are used to repeat logic until a given condition evaluates to false. They can also be used to repeat logic n number of times.
 - While loops are used to execute logic until a condition evaluates to true.
-- For loops are used to repeat logic a finite number of times.
 
 **Integer Overflow & Underflow**
 - Signed `int`s can store values between 2 billion and. -2 billion on a 32 bit machine.
@@ -40,6 +46,7 @@
 ## Week 2 - Lecture 2 - Arrays
 
 ### General Knowledge
+- An array is specifically a contiguous block of memory who's size be defined at compile time either in the declaration or through a constant.
 - Ciphertext is just plaintext that has been encrypted through an algorithm.
 - `gcc` and `clang` are different compilers used to convert source code to machine code.
 - Running `clang <filename>.c` will output and `a.out` file e.g., `clang hello.c` -> `a.out`. 
@@ -565,11 +572,13 @@ int main(void)
 
 ### Valgrind
 - Detects memory leaks.
+- Memory leaks are particularly bad for long-running programs as less space becomes available for other programs to run.
+- Leaks are avoided by freeing variables created through `malloc()` by using the `free()` function in `stdlib.h`.
 
 ### Heap / Stack
 - Memory is divided up into 1. machine code, 2. global variables, 3. heap, 4. stack.
 - **Heap** is user allocated memory e.g., through `malloc();`. Is prone to **heap overflow** - when the program writes more memory on the heap that is allocated for the heap - the program can then write beyond the bounds of the heap memory.
-- **Stack** stores function variables and arguments. Is prone to **stack overflow** - functions taking up too much memory and not returning.
+- **Stack** stores static function variables and arguments. Is prone to **stack overflow** - functions taking up too much memory and not returning.
 - Recursion can cause a **stack overflow** as each recursive step adds an additional stack frame with it's own variables and arguments. In case of iteration, only one stack frame is required. Recursion may not always consume more stack space than iteration - depends on implementation of the programming language and the underlying compiler.
 
 ### Null pointer exception
@@ -646,3 +655,25 @@ while (fread(buffer, 1, BLOCK_SIZE, inptr) == BLOCK_SIZE)
 fclose(outptr);
 fclose(inptr);
 ```
+
+## Week 5 - Lecture 5 - Data Structures
+### General Knowledge
+- Arrays are contiguous, meaning data is stored next to each other in memory. Becomes painful very quickly when adding extra items to the array - overconsumption of memory, more code etc... Memory may not have enough space to completely copy new values.
+- Linked lists are discontiguous meaning data is not stored next to each other. One node contains the data and a pointer to the next item. The end node points to NULL signifying the end of a list.\
+- `NULL` refers to `Ox0` - the convention for a NULL character pointer in memory.
+
+
+### Linked Lists
+- LLs consume > 2x more memory - as the pointers are 8 bytes.
+- LLs do not allow indexing. Cannot do binary search.
+- Self referencing structs need to be defined with the type name e.g.,
+```
+typedef struct node
+{
+    int number;
+    struct node *next;
+}
+node;
+```
+- `n1->number = 1;` is syntactic sugar for `(*n).number = 1;`.
+- The program only needs to remember the location of the first (head) node. All operations on the linked list must begin from the head node (node *list).
