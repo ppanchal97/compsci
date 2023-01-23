@@ -5,6 +5,7 @@
 - Strings (char *str;) or arrays (int nums[5];) are NOT assignable. The values have to be copied to the other variable using `strcpy()` or `memcpy()`.
 - The `->` operator is an abstraction for a pointer to a variable in a struct e.g., `node->int = 1;` == `*(node).int = 1;`.
 - ALL arguments passed into functions are copied by value, unless the pointer is passed as an argument or the data type of the argument is an array or a string.
+- Use `fread()` to continuously read a pre-determined chunk of memory from a file, use `fgets()` to read a file line by line.
 
 ### The Problem Solving Method
 1. Identify the core algorithm. e.g., ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.

@@ -68,7 +68,7 @@ unsigned int hash(const char *word)
     while ((c = *word++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
-    return hash % 50000;
+    return hash % N;
 }
 
 // Read each word from the dict then load into the hash-table, returning true if successful, else false
