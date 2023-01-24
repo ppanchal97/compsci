@@ -90,94 +90,6 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
-BLURPIXEL get_box_blur_value(int height, int width, RGBTRIPLE image_copy[height][width], int i, int j)
-{
-
-    int red_avg = 0;
-    int blue_avg = 0;
-    int green_avg = 0;
-
-    int count = 0;
-
-    blue_avg += image_copy[i][j].rgbtBlue;
-    green_avg += image_copy[i][j].rgbtGreen;
-    red_avg += image_copy[i][j].rgbtRed;
-
-    count += 1;
-
-    if (j != 0)
-    {
-        blue_avg += image_copy[i][j - 1].rgbtBlue;
-        green_avg += image_copy[i][j - 1].rgbtGreen;
-        red_avg += image_copy[i][j - 1].rgbtRed;
-
-        count += 1;
-    }
-    if (j != width - 1)
-    {
-        blue_avg += image_copy[i][j + 1].rgbtBlue;
-        green_avg += image_copy[i][j + 1].rgbtGreen;
-        red_avg += image_copy[i][j + 1].rgbtRed;
-
-        count += 1;
-    }
-    if (i != 0)
-    {
-        blue_avg += image_copy[i - 1][j].rgbtBlue;
-        green_avg += image_copy[i - 1][j].rgbtGreen;
-        red_avg += image_copy[i - 1][j].rgbtRed;
-
-        count += 1;
-    }
-    if (i != 0 && j != 0)
-    {
-        blue_avg += image_copy[i - 1][j - 1].rgbtBlue;
-        green_avg += image_copy[i - 1][j - 1].rgbtGreen;
-        red_avg += image_copy[i - 1][j - 1].rgbtRed;
-
-        count += 1;
-    }
-    if (i != 0 && j != width - 1)
-    {
-        blue_avg += image_copy[i - 1][j + 1].rgbtBlue;
-        green_avg += image_copy[i - 1][j + 1].rgbtGreen;
-        red_avg += image_copy[i - 1][j + 1].rgbtRed;
-
-        count += 1;
-    }
-    if (i != height - 1)
-    {
-        blue_avg += image_copy[i + 1][j].rgbtBlue;
-        green_avg += image_copy[i + 1][j].rgbtGreen;
-        red_avg += image_copy[i + 1][j].rgbtRed;
-
-        count += 1;
-    }
-    if (i != height - 1 && j != width - 1)
-    {
-        blue_avg += image_copy[i + 1][j + 1].rgbtBlue;
-        green_avg += image_copy[i + 1][j + 1].rgbtGreen;
-        red_avg += image_copy[i + 1][j + 1].rgbtRed;
-
-        count += 1;
-    }
-    if (i != height - 1 && j != 0)
-    {
-        blue_avg += image_copy[i + 1][j - 1].rgbtBlue;
-        green_avg += image_copy[i + 1][j - 1].rgbtGreen;
-        red_avg += image_copy[i + 1][j - 1].rgbtRed;
-
-        count += 1;
-    }
-
-    BLURPIXEL b;
-    b.rgbtBlue = blue_avg / count;
-    b.rgbtGreen = green_avg / count;
-    b.rgbtRed = red_avg / count;
-
-    return b;
-}
-
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
@@ -192,234 +104,77 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
-    // iterate over the copy
+    /*
+    for each row
+    for each col
+        set count to 0
+        for every neighboring pixel within the radius m in the x direction
+            for every neighboring pixel within the radius m in the y direction
+                 add the color to the total
+                 count++
+        final_color = total/count
+        set pixel(current x, current y, final_color)
+
+    */
+
+    for (int row = 0; row < height; row++)
+    {
+        for (int col = 0; col < width; col++)
+        {
+            int count = 0;
+            int col_coords[3] = {col - 1, col, col + 1};
+            int row_coords[3] = {row - 1, row, row + 1};
+
+            float red_count = 0;
+            float green_count = 0;
+            float blue_count = 0;
+
+            for (int r = 0; r < 3; r++)
+            {
+                for (int c = 0; c < 3; c++)
+                {
+                    int current_row = row_coords[r];
+                    int current_col = col_coords[c];
+
+                    if (current_row >= 0 && current_row < height && current_col >= 0 && current_col < width)
+                    {
+                        // valid pixel to use
+                        RGBTRIPLE p = image[current_row][current_col];
+                        red_count += p.rgbtRed;
+                        green_count += p.rgbtGreen;
+                        blue_count += p.rgbtBlue;
+                        count++;
+                    }
+                }
+            }
+
+            // set blur value of pixel
+            copy[row][col].rgbtRed = round(red_count / count);
+            copy[row][col].rgbtGreen = round(green_count / count);
+            copy[row][col].rgbtBlue = round(blue_count / count);
+        }
+    }
+
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            // for each pixel, get the box blur value from the copy
-            BLURPIXEL b = get_box_blur_value(height, width, copy, i, j);
-            // write that blur average to the pixel of the original image
-            image[i][j].rgbtRed = b.rgbtRed;
-            image[i][j].rgbtBlue = b.rgbtBlue;
-            image[i][j].rgbtGreen = b.rgbtGreen;
+            image[i][j] = copy[i][j];
         }
     }
 
     return;
 }
 
-int get_sobel_value(int color, int direction, int height, int width, int i, int j, int hex, RGBTRIPLE image_copy[height][width])
-{
-    int kernel_sum = 0;
+int GX[3][3] = {
+    {-1, 0, 1},
+    {-2, 0, 2},
+    {-1, 0, 1}};
 
-    int kernel[3][3];
-
-    if (direction == 0)
-    {
-        // horizontal
-        kernel[0][0] = -1;
-        kernel[0][1] = 0;
-        kernel[0][2] = 1;
-        kernel[1][0] = -2;
-        kernel[1][1] = 0;
-        kernel[1][2] = 2;
-        kernel[2][0] = -1;
-        kernel[2][1] = 0;
-        kernel[2][2] = 1;
-    }
-    else if (direction == 1)
-    {
-        // vertical
-        kernel[0][0] = -1;
-        kernel[0][1] = -2;
-        kernel[0][2] = -1;
-        kernel[1][0] = 0;
-        kernel[1][1] = 0;
-        kernel[1][2] = 0;
-        kernel[2][0] = 1;
-        kernel[2][1] = 2;
-        kernel[2][2] = 1;
-    }
-
-    switch (color)
-    {
-    case 0:
-        // red
-        kernel_sum += kernel[1][1] * image_copy[i][j].rgbtRed;
-
-        if (j - 1 >= 0)
-        {
-            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtRed;
-        }
-        else
-        {
-            kernel_sum += kernel[1][0] * 0;
-        }
-
-        if (j + 1 <= width)
-        {
-            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtRed;
-        }
-        else
-        {
-            kernel_sum += kernel[1][2] * 0;
-        }
-
-        if (i - 1 >= 0 && j - 1 >= 0)
-        {
-            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtRed;
-        }
-        else
-        {
-            kernel_sum += kernel[0][0] * 0;
-        }
-
-        if (i - 1 >= 0)
-        {
-            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtRed;
-        }
-
-        if (i - 1 >= 0 && j + 1 <= width)
-        {
-            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtRed;
-        }
-
-        if (i + 1 <= height && j - 1 >= 0)
-        {
-            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtRed;
-        }
-
-        if (i + 1 <= height)
-        {
-            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtRed;
-        }
-
-        if (i + 1 <= height && j + 1 <= width)
-        {
-            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtRed;
-        }
-
-        break;
-    case 1:
-        // green
-     kernel_sum += kernel[1][1] * image_copy[i][j].rgbtGreen;
-        
-        if (j - 1 >= 0)
-        {
-            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtGreen;
-        }
-        else
-        {
-            kernel_sum += kernel[1][0] * 0;
-        }
-
-        if (j + 1 <= width)
-        {
-            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtGreen;
-        }
-        else
-        {
-            kernel_sum += kernel[1][2] * 0;
-        }
-
-        if (i - 1 >= 0 && j - 1 >= 0)
-        {
-            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtGreen;
-        }
-        else
-        {
-            kernel_sum += kernel[0][0] * 0;
-        }
-
-        if (i - 1 >= 0)
-        {
-            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtGreen;
-        }
-
-        if (i - 1 >= 0 && j + 1 <= width)
-        {
-            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtGreen;
-        }
-
-        if (i + 1 <= height && j - 1 >= 0)
-        {
-            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtGreen;
-        }
-
-        if (i + 1 <= height)
-        {
-            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtGreen;
-        }
-
-        if (i + 1 <= height && j + 1 <= width)
-        {
-            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtGreen;
-        }
-        break;
-    case 2:
-        // blue
- kernel_sum += kernel[1][1] * image_copy[i][j].rgbtBlue;
-        
-        if (j - 1 >= 0)
-        {
-            kernel_sum += kernel[1][0] * image_copy[i][j - 1].rgbtBlue;
-        }
-        else
-        {
-            kernel_sum += kernel[1][0] * 0;
-        }
-
-        if (j + 1 <= width)
-        {
-            kernel_sum += kernel[1][2] * image_copy[i][j + 1].rgbtBlue;
-        }
-        else
-        {
-            kernel_sum += kernel[1][2] * 0;
-        }
-
-        if (i - 1 >= 0 && j - 1 >= 0)
-        {
-            kernel_sum += kernel[0][0] * image_copy[i - 1][j - 1].rgbtBlue;
-        }
-        else
-        {
-            kernel_sum += kernel[0][0] * 0;
-        }
-
-        if (i - 1 >= 0)
-        {
-            kernel_sum += kernel[0][1] * image_copy[i - 1][j].rgbtBlue;
-        }
-
-        if (i - 1 >= 0 && j + 1 <= width)
-        {
-            kernel_sum += kernel[0][2] * image_copy[i - 1][j + 1].rgbtBlue;
-        }
-
-        if (i + 1 <= height && j - 1 >= 0)
-        {
-            kernel_sum += kernel[2][0] * image_copy[i + 1][j - 1].rgbtBlue;
-        }
-
-        if (i + 1 <= height)
-        {
-            kernel_sum += kernel[2][1] * image_copy[i + 1][j].rgbtBlue;
-        }
-
-        if (i + 1 <= height && j + 1 <= width)
-        {
-            kernel_sum += kernel[2][2] * image_copy[i + 1][j + 1].rgbtBlue;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    return kernel_sum;
-}
+int GY[3][3] = {
+    {-1, -2, -1},
+    {0, 0, 0},
+    {1, 2, 1}};
 
 // Detect edges
 void edges(int height, int width, RGBTRIPLE image[height][width])
@@ -435,31 +190,65 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
+    for (int row = 0; row < height; row++)
+    {
+        for (int col = 0; col < width; col++)
+        {
+            int col_coords[3] = {col - 1, col, col + 1};
+            int row_coords[3] = {row - 1, row, row + 1};
+
+            float GXR = 0;
+            float GXG = 0;
+            float GXB = 0;
+            float GYR = 0;
+            float GYG = 0;
+            float GYB = 0;
+
+            for (int r = 0; r < 3; r++)
+            {
+                for (int c = 0; c < 3; c++)
+                {
+                    int current_row = row_coords[r];
+                    int current_col = col_coords[c];
+
+                    if (current_row >= 0 && current_row < height && current_col >= 0 && current_col < width)
+                    {
+                        // found valid pixel to use
+                        RGBTRIPLE p = image[current_row][current_col];
+
+                        // compute Gx for r chan
+                        GXR += GX[r][c] * p.rgbtRed;
+
+                        // compute Gx for g chan
+                        GXG += GX[r][c] * p.rgbtGreen;
+
+                        // compute Gx for b chan
+                        GXB += GX[r][c] * p.rgbtBlue;
+
+                        // compute Gy for r chan
+                        GYR += GY[r][c] * p.rgbtRed;
+
+                        // compute Gy for g chan
+                        GYG += GY[r][c] * p.rgbtGreen;
+
+                        // compute Gy for b chan
+                        GYB += GY[r][c] * p.rgbtBlue;
+                    }
+                }
+            }
+
+            // set edge value of original pixel
+            copy[row][col].rgbtRed = cap_hex_value(sqrt(GXR * GXR + GYR * GYR));
+            copy[row][col].rgbtGreen = cap_hex_value(sqrt(GXG * GXG + GYG * GYG));
+            copy[row][col].rgbtBlue = cap_hex_value(sqrt(GXB * GXB + GYB * GYB));
+        }
+    }
+
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            // for each pixel
-            // get GX value for red chan
-            int gx_value_red_chan = get_sobel_value(0, 0, height, width, i, j, image[i][j].rgbtRed, copy);
-            // get GX value for green chan
-            int gx_value_green_chan = get_sobel_value(1, 0, height, width, i, j, image[i][j].rgbtRed, copy);
-            // get GX value for blue chan
-            int gx_value_blue_chan = get_sobel_value(2, 0, height, width, i, j, image[i][j].rgbtRed, copy);
-
-            // get GY value for red chan
-            int gy_value_red_chan = get_sobel_value(0, 1, height, width, i, j, image[i][j].rgbtRed, copy);
-            // get GY value for green chan
-            int gy_value_green_chan = get_sobel_value(1, 1, height, width, i, j, image[i][j].rgbtRed, copy);
-            // get GY value for blue chan
-            int gy_value_blue_chan = get_sobel_value(2, 1, height, width, i, j, image[i][j].rgbtRed, copy);
-
-            // apply sobel operator to GX and GY value for red chan, round and cap at 255
-            image[i][j].rgbtRed = cap_hex_value(sqrt(gx_value_red_chan * gx_value_red_chan + gy_value_red_chan * gy_value_red_chan));
-            // apply sobel operator to GX and GY value for green chan, round and cap at 255
-            image[i][j].rgbtGreen = cap_hex_value(sqrt(gx_value_green_chan * gx_value_green_chan + gy_value_green_chan * gy_value_green_chan));
-            // apply sobel operator to GX and GY value for blue chan, round and cap at 255
-            image[i][j].rgbtBlue = cap_hex_value(sqrt(gx_value_blue_chan * gx_value_blue_chan + gy_value_blue_chan * gy_value_blue_chan));
+            image[i][j] = copy[i][j];
         }
     }
 
