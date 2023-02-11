@@ -19,7 +19,7 @@ FILE *inptr = NULL;
 
 const unsigned int N = 50000;
 
-// Hash table
+// Hash table (array of pointers to linked list head nodes)
 node *table[N];
 
 // Words read in dictionary

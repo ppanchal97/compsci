@@ -46,6 +46,7 @@ int grade_text(char *text)
     float sentence_count = count_sentences(text);
 
     float index = 0.0588 * letter_count / word_count * 100 - 0.296 * sentence_count / word_count * 100 - 15.8;
+    printf("index: %f\n", index);
     index = round(index);
     int integer_index = index;
 
@@ -54,17 +55,19 @@ int grade_text(char *text)
 
 float count_letters(char *text)
 {
-    float counter = 0;
+    float letter_counter = 0;
 
     for (int i = 0; i < strlen(text); i++)
     {
         if (isalpha(text[i]))
         {
-            counter++;
+            letter_counter++;
         }
     }
 
-    return counter;
+    printf("%f letters\n", letter_counter);
+
+    return letter_counter;
 }
 
 float count_words(char *text)
@@ -78,6 +81,7 @@ float count_words(char *text)
         }
     }
 
+    printf("%f words\n", word_counter);
     return word_counter;
 }
 
@@ -95,5 +99,6 @@ float count_sentences(char *text)
         }
     }
 
+    printf("%f sentences\n", sentence_counter);
     return sentence_counter;
 }

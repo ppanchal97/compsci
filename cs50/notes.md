@@ -2,10 +2,18 @@
 
 
 ### C Specific Language Features
+- Implements the **procedural** paradigm (imperative programming) where code is structured as a collection of functions where any given function may be called at any point during a program's execution
 - Strings (char *str;) or arrays (int nums[5];) are NOT assignable. The values have to be copied to the other variable using `strcpy()` or `memcpy()`.
 - The `->` operator is an abstraction for a pointer to a variable in a struct e.g., `node->int = 1;` == `*(node).int = 1;`.
 - ALL arguments passed into functions are copied by value, unless the pointer is passed as an argument or the data type of the argument is an array or a string.
 - Use `fread()` to continuously read a pre-determined chunk of memory from a file, use `fgets()` to read a file line by line.
+- Idiomatic C code is rigorous in checking types, return values and handles all potential errors.
+
+### Python Specific Language Features
+- Implements the object-oriented programming paradigm (imperative programming) - enables types (classes) to encapsulate data and the functions that can read and modify that data.
+- Python manages memory automatically - allocation and freeing. You cannot allocate memory dynamically on the heap. 
+- Idiomatic python code takes is lackadaisical and not as rigorous as C. `try`, `catch` and `except` are used to handle problems as they happen without the rigorous safety of C.
+- The shebang line `#!/usr/bin/env python3` when added to the top of files automatically specifies the Python interpreter and files can be run with `./FILE_NAME` if `chmod +x FILE_NAME` has been run.
 
 ### The Problem Solving Method
 1. Identify the core algorithm. e.g., ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.
@@ -678,3 +686,24 @@ node;
 ```
 - `n1->number = 1;` is syntactic sugar for `(*n).number = 1;`.
 - The program only needs to remember the location of the first (head) node. All operations on the linked list must begin from the head node (node *list).
+
+
+## Week 6 - Lecture 6 - Python
+### General Knowledge
+- No parentheses or braces, code is structured using indentation.
+- No array data type in the strict sense of contiguous block of memory. Replaced by list `nums = [1,2,3]`.
+- No risk of overflowing integers as in C as python automatically assigns 8 bytes to all integer values.
+- No concept of a single character, chars are just strings of length 1.
+- `range(start, stop, step=1)` function hands an integer between start and stop 1 at a time.
+
+### Positional & Named Arguments
+- In Python the `print` function accepts not only positional arguments e.g., `print("hello ", "parik", " panchal")`, but also accepts named arguments such as `end`.
+
+### Slices
+- Python supports slicing lists e.g., `nums[index_inclusive:index_exclusive]` which returns a copy of the list but only with the values between the range of indexes.
+- The `return 0;` in C is replaced by `sys.exit(0)` - this can be check from the terminal by running `echo $?`.
+- Hash-tables (key value pairs) and Hash-sets (values only) are built into Python as `dict()` and `set()` respectively.
+
+
+### Common functions
+- Return type of `input()` is 
