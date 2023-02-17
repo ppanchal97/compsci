@@ -9,6 +9,19 @@
 - Use `fread()` to continuously read a pre-determined chunk of memory from a file, use `fgets()` to read a file line by line.
 - Idiomatic C code is rigorous in checking types, return values and handles all potential errors.
 
+**Data Types and Mutability**
+
+| Immutable Data Types | Mutable Data Types |
+| -------------------- | ------------------ |
+| `char`               | `char[]`           |
+| `int`                | `int[]`            |
+| `float`              | `float[]`          |
+| `double`             | `double[]`         |
+| `enum`               | `struct`           |
+| `const`              | `pointer`          |
+
+*Note that the const keyword can be used to make any data type immutable, but it is not a data type itself. Additionally, while arrays are technically mutable in C, their size cannot be changed once they are declared, so they are considered immutable for practical purposes.*
+
 ### Python Specific Language Features
 - Implements the object-oriented programming paradigm (imperative programming) - enables types (classes) to encapsulate data and the functions that can read and modify that data.
 - Python manages memory automatically - allocation and freeing. You cannot allocate memory dynamically on the heap. 
@@ -82,15 +95,15 @@ De-compiling is the process of converting machine code to source code. Compilers
 ### Data Types
 Each data type has a specific number of bits assigned to it by the machine. 8 bits is 1 byte. Modern 64 bit machines have integers and memory addresses that are 8 bytes wide.
 
-| Data Type    | Memory Requirement |
-| -------------| ------------------ |
-| `bool`       | 1 byte             |
-| `int`        | 4 bytes            |
-| `long`       | 8 bytes            |
-| `float`      | 4 bytes            |
-| `double`     | 8 bytes            |
-| `char`       | 4 bytes            |
-| `* (pointer)`| 8 bytes            |
+| Data Type     | Memory Requirement |
+| ------------- | ------------------ |
+| `bool`        | 1 byte             |
+| `int`         | 4 bytes            |
+| `long`        | 8 bytes            |
+| `float`       | 4 bytes            |
+| `double`      | 8 bytes            |
+| `char`        | 4 bytes            |
+| `* (pointer)` | 8 bytes            |
 
 ### Arrays
 - An array is a linear data structure used to store data contiguously in memory (data is stored next to each other).
@@ -203,14 +216,14 @@ Refers to the asymptotic runtime complexity of an algorithm. Signifies how the r
 
 **Runtimes by speed (slowest / most inefficient first)**
 
-| Complexity  | Explanation                                                                                                          |
-| ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| `O(n!)`     | Most inefficient. May never reach the end of the data sequence.                                                      |
-| `O(n^2)`    | Highly inefficient. The average complexity of naive sorting algorithms (bubble-sort, insertion-sort, selection-sort).|
-| `O(n log n)`| Average runtime of efficient sorting algorithms e.g., merge-sort.                                                    |
-| `O(n)`      | Runtime grows linearly with the value with n. Average runtime of naive searching algorithms e.g., linear search.     |
-| `O(log n)`  | Average runtime of efficient searching algorithms e.g., binary-search.                                               |
-| `O(1)`      | Represents constant time (a finite number of steps for any input size)                                               |
+| Complexity   | Explanation                                                                                                           |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `O(n!)`      | Most inefficient. May never reach the end of the data sequence.                                                       |
+| `O(n^2)`     | Highly inefficient. The average complexity of naive sorting algorithms (bubble-sort, insertion-sort, selection-sort). |
+| `O(n log n)` | Average runtime of efficient sorting algorithms e.g., merge-sort.                                                     |
+| `O(n)`       | Runtime grows linearly with the value with n. Average runtime of naive searching algorithms e.g., linear search.      |
+| `O(log n)`   | Average runtime of efficient searching algorithms e.g., binary-search.                                                |
+| `O(1)`       | Represents constant time (a finite number of steps for any input size)                                                |
 
 **Dominant Term** - the term in the algorithm that experiences the most growth.
 
@@ -303,21 +316,21 @@ int main(void) {
 ### Sorting Algorithms
 - Consider whether sorting is worth it if only going to search once as linear search may be more efficient than first sorting then searching.
 
-|   Algorithm	 |    Best     |   Average   | 	  Worst    | Worst (Space) |
-| -------------- | ----------- | ---------   | ----------- | -----------   |
-| Selection Sort | 	Ω(n^2)     | θ(n^2)      | O(n^2)       | O(1)         |
-| Bubble Sort    | 	Ω(n)       | θ(n^2)      | O(n^2)       | O(1)         |
-| Insertion Sort | 	Ω(n)       | θ(n^2)      | O(n^2)       | O(1)         |
-| Heap Sort      | 	Ω(n log(n))| θ(n log(n)) | O(n log(n))  | O(1)         |
-| Quick Sort     | 	Ω(n log(n))| θ(n log(n)) | O(n^2)	    | O(n)         |
-| Merge Sort     | 	Ω(n log(n))| θ(n log(n)) | O(n log(n))  | O(n)         |
-| Bucket Sort    | 	Ω(n +k)    | θ(n +k)     | O(n^2)       | O(n)         |
-| Radix Sort     | 	Ω(nk)      | θ(nk)	     | O(nk)	    | O(n + k)     |
-| Count Sort     | 	Ω(n +k)    | θ(n +k)     | O(n +k)      | O(k)         |
-| Shell Sort     | 	Ω(n log(n))| θ(n log(n)) | O(n^2)	    | O(1)         |
-| Tim Sort       | 	Ω(n)       | θ(n log(n)) | O(n log (n)) | O(n)         |
-| Tree Sort      | 	Ω(n log(n))| θ(n log(n)) | O(n^2)       | O(n)         |
-| Cube Sort      | 	Ω(n)       | θ(n log(n)) | O(n log(n))  | O(n)         |
+| Algorithm      | Best        | Average     | Worst        | Worst (Space) |
+| -------------- | ----------- | ----------- | ------------ | ------------- |
+| Selection Sort | Ω(n^2)      | θ(n^2)      | O(n^2)       | O(1)          |
+| Bubble Sort    | Ω(n)        | θ(n^2)      | O(n^2)       | O(1)          |
+| Insertion Sort | Ω(n)        | θ(n^2)      | O(n^2)       | O(1)          |
+| Heap Sort      | Ω(n log(n)) | θ(n log(n)) | O(n log(n))  | O(1)          |
+| Quick Sort     | Ω(n log(n)) | θ(n log(n)) | O(n^2)       | O(n)          |
+| Merge Sort     | Ω(n log(n)) | θ(n log(n)) | O(n log(n))  | O(n)          |
+| Bucket Sort    | Ω(n +k)     | θ(n +k)     | O(n^2)       | O(n)          |
+| Radix Sort     | Ω(nk)       | θ(nk)       | O(nk)        | O(n + k)      |
+| Count Sort     | Ω(n +k)     | θ(n +k)     | O(n +k)      | O(k)          |
+| Shell Sort     | Ω(n log(n)) | θ(n log(n)) | O(n^2)       | O(1)          |
+| Tim Sort       | Ω(n)        | θ(n log(n)) | O(n log (n)) | O(n)          |
+| Tree Sort      | Ω(n log(n)) | θ(n log(n)) | O(n^2)       | O(n)          |
+| Cube Sort      | Ω(n)        | θ(n log(n)) | O(n log(n))  | O(n)          |
 
 ### 1. Selection Sort
 #### Description
