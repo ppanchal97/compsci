@@ -85,12 +85,17 @@
 
 De-compiling is the process of converting machine code to source code. Compilers don't remember function or variable names - this makes it harder to reverse engineer it.
 
-**Debugging**
+### Debugging
+- Involves stopping the execution of a program at a set point in the code using a breakpoint, then using the tools continue, step into, step out and step over to find mistakes in the code.
+
+**Process**
 - Use a `printf()` statement to check state of the program.
 - Breakpoints allow you to slow execution to step through the program line by line.
 - The CALL STACK shows the currently running function (top-most) and which functions will run once the current one exits.
-- `step over` -> run the line of code currently highlighted by the debugger. Useful when you are confident the line will work. E.g., a method is about to be invoked, but you're not interested in debugging this particular invocation, so you want the debugger to execute that method completely as one entire step.
-- `step into` -> inspect the line of code currently highlighted by the debugger. Useful when you need to investigate further. E.g., a method is about to be invoked, and you want to debug into the code of that method, so the next step is to go into that method and continue debugging step-by-step.
+- `Continue` -> Resumes program execution after it had been stopped by the debugger until the next breakpoint is encountered.
+- `step over` -> Run the line of code currently highlighted by the debugger. Useful when you are confident the line will work. E.g., a method is about to be invoked, but you're not interested in debugging this particular invocation, so you want the debugger to execute that method completely as one entire step.
+- `step into` -> Inspect the line of code currently highlighted by the debugger. Useful when you need to investigate further. E.g., a method is about to be invoked, and you want to debug into the code of that method, so the next step is to go into that method and continue debugging step-by-step.
+- `step out` -> Runs the current function to completion and return to the line of code that had called that function. E.g., the debugger is inside of a function and the user does not want to step through every line of the function. 
 
 ### Data Types
 Each data type has a specific number of bits assigned to it by the machine. 8 bits is 1 byte. Modern 64 bit machines have integers and memory addresses that are 8 bytes wide.
