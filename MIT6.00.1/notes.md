@@ -6,6 +6,7 @@
   - In summary, the main difference between a function and a method is that a **function is a standalone piece of code** that operates on input arguments, while a **method is a function that is associated with an object or class** and operates on the data members of that class.
 
 # Python specific notes
+- Pythonic means "Easier to Ask for Forgiveness than Permission" (EAFP) - a lackadaisical approach to programming where an operation is carried out regardless of verifying whether the inputs are correct and any exceptions are just handled along the way.
 - It's important to note that the `==` operator is not the same as the `is` operator in Python. The `is` operator compares the memory addresses of two objects to determine if they are the same object, while the `==` operator compares their values.
 - Variable bindings are evaluated right hand side to left hand side.
 - Slicing with square brackets has the following syntax: [start, stop - 1, step]. A string can be reversed by `str[::-1]`. This sets the step to -1, traversing the string in a reverse order. If no ints are provided in the slice, they are considered as 0.
