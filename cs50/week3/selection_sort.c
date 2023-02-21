@@ -32,8 +32,6 @@ int selection_sort(int nums[], int arr_len)
                 min_position = j;
             }
         }
-        // swap current position's value with the minimum value
-        int holder = nums[min_position];
         nums[min_position] = nums[i];
         nums[i] = current_min;
         printf("%i ", nums[i]);
