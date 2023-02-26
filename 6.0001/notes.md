@@ -1,11 +1,14 @@
-# General Knowledge
+### MIT 6.0001 Course Notes
+
+
+### General Knowledge
 - Turing complete means that 6 primitives (right, left, print, scan, erase, do nothing), can compute anything that is computable.
 - Both functions and methods are used to define reusable code that can be called multiple times. However, there is a subtle difference between them: 
   - A function is a **standalone piece** of code that can be called by other parts of the program. It takes input arguments, performs some operation, and returns a value. Functions are typically defined outside of classes and can be called from any part of the program that has access to them.
   - On the other hand, a method is a function that is **associated with an object or class**. It is defined inside a class and operates on the data members of that class. A method is called on an instance of the class, and it can access and modify the state of the object it belongs to.
   - In summary, the main difference between a function and a method is that a **function is a standalone piece of code** that operates on input arguments, while a **method is a function that is associated with an object or class** and operates on the data members of that class.
 
-# Python specific notes
+### Python Specific Notes
 - Pythonic means "Easier to Ask for Forgiveness than Permission" (EAFP) - a lackadaisical approach to programming where an operation is carried out regardless of verifying whether the inputs are correct and any exceptions are just handled along the way.
 - It's important to note that the `==` operator is not the same as the `is` operator in Python. The `is` operator compares the memory addresses of two objects to determine if they are the same object, while the `==` operator compares their values.
 - Variable bindings are evaluated right hand side to left hand side.
@@ -181,7 +184,7 @@ Common use cases:
 1. Fixed program - are designed to only compute one thing. e.g., calculators, Turing's Bombe.
 2. Stored program - store the data and the instructions to operate on the data in memory. Are capable of computing an infinite range of things.
 
-### Path variable
+### Path Variable
 - An environment variable that instructs a Linux system in which directories to search for executables. The PATH variable enables the user to run a command **without specifying a path** to the original installation of the tool.
 - To add a path e.g., `usr/bin/local/...` to PATH, insert it into the `.zshrc` / `.bashrc` (terminal session profile) files.
 - Turing Halting Problem: impossible for computers to predict if a program will **always halt** with an answer for any given input.
@@ -269,7 +272,7 @@ There exist problems where the time complexity is always exponential, meaning th
 - The **graph coloring problem**: Given a graph, the graph coloring problem asks for the minimum number of colors needed to color the vertices of the graph so that no two adjacent vertices have the same color. The brute force solution to this problem has a time complexity of O(n^k), where n is the number of vertices in the graph and k is the maximum degree of any vertex in the graph. For many graphs, k is a constant, so the time complexity is exponential in n.
 - The **boolean satisfiability problem (SAT)**: Given a boolean formula in conjunctive normal form (CNF), the SAT problem asks if there is a truth assignment to the variables that makes the formula true. The best-known algorithms for this problem have a worst-case running time of O(2^n), which is exponential in the number of variables in the formula.
 
-### Process to calculate Big O
+### Process to Calculate Big O
 
 1. Make an expression of the number of operations / comparisons of the algorithm.
 2. Simplify the expression.
