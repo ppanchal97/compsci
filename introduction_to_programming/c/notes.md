@@ -51,7 +51,7 @@
 - The `main` function and custom data types defined using `typedef` are normally declared at top of the file for better readability.
 
 **Loops**
-- For loops are used to repeat logic until a given condition evaluates to false. They can also be used to repeat logic n number of times.
+- For loops are used to repeat logic until a given condition evaluates to false - similar to `while` loop logic. They can also be used to repeat logic n number of times.
 - While loops are used to execute logic until a condition evaluates to true.
 
 **Integer Overflow & Underflow**
