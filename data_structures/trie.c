@@ -1,4 +1,3 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,10 +8,6 @@
 // Since we have 26 english letters, we need
 // 26 children per node
 #define N 26
-#define LENGTH 45
-
-int WORDS_READ = 0;
-int misspellings = 0;
 
 typedef struct TrieNode
 {
@@ -30,168 +25,35 @@ TrieNode *insert_trie(TrieNode *root, char *word);
 int search_trie(TrieNode *root, char *word);
 void print_trie(TrieNode *root);
 void print_search(TrieNode *root, char *word);
+TrieNode *delete_trie(TrieNode *root, char *word);
 double calculate(const struct rusage *b, const struct rusage *a);
 unsigned int size(void);
 
-int main(int argc, char *argv[])
+int main(void)
 {
-    // Structures for timing data
-    struct rusage before, after;
-
-    // Benchmarks
-    double time_load = 0.0, time_check = 0.0, time_size = 0.0, time_unload = 0.0;
-
     // Driver program for the Trie Data Structure Operations
     TrieNode *root = make_trienode('\0');
-
-    // File with names
-    FILE *inptr = fopen(argv[1], "r");
-    if (!inptr)
-    {
-        printf("Error opening dictionary!\n");
-        return 1;
-    }
-
-    // ========= LOAD =========
-    getrusage(RUSAGE_SELF, &before);
-    char buffer[45 + 1];
-    // Add words to the trie
-    while (fscanf(inptr, "%s", buffer) == 1)
-    {
-        const unsigned long word_len = strlen(buffer);
-        char *word = malloc((word_len + 1) * sizeof(char));
-        for (int i = 0; i < word_len; i++)
-        {
-            if (isalpha(buffer[i]))
-            {
-                word[i] = tolower(buffer[i]);
-            }
-            else if (ispunct(buffer[i]))
-            {
-                word[i] = buffer[i];
-            }
-            
-        }
-        word[word_len + 1] = '\0';
-        // printf("inserting %s\n", word);
-        WORDS_READ++;
-        root = insert_trie(root, word);
-    }
-
-    getrusage(RUSAGE_SELF, &after);
-    // Calculate time to load dictionary
-    time_load = calculate(&before, &after);
-
-    // ========= END LOAD =========
-
-    FILE *textinptr = fopen(argv[2], "r");
-    if (!textinptr)
-    {
-        printf("Error opening text!\n");
-        return 1;
-    }
-
-    // ========= CHECK =========
-    getrusage(RUSAGE_SELF, &before);
-
-    int index = 0, words = 0;
-    char word[LENGTH + 1];
-
-    // Spell-check each word in text
-    char c;
-    while (fread(&c, sizeof(char), 1, textinptr))
-    {
-        // Allow only alphabetical characters and apostrophes
-        if (isalpha(c) || (c == '\'' && index > 0))
-        {
-            // Append character to word
-            word[index] = c;
-            index++;
-
-            // Ignore alphabetical strings too long to be words
-            if (index > LENGTH)
-            {
-                // Consume remainder of alphabetical string
-                while (fread(&c, sizeof(char), 1, textinptr) && isalpha(c))
-                    ;
-
-                // Prepare for new word
-                index = 0;
-            }
-        }
-
-        // Ignore words with numbers (like MS Word can)
-        else if (isdigit(c))
-        {
-            // Consume remainder of alphanumeric string
-            while (fread(&c, sizeof(char), 1, textinptr) && isalnum(c))
-                ;
-
-            // Prepare for new word
-            index = 0;
-        }
-
-        // We must have found a whole word
-        else if (index > 0)
-        {
-            // Terminate current word
-            word[index] = '\0';
-
-            // Update counter
-            words++;
-
-            for (int i = 0; word[i]; i++)
-            {
-                word[i] = tolower(word[i]);
-            }
-
-            // Check word's spelling
-            // printf("checking %s\n", word);
-            print_search(root, word);
-
-            // Prepare for next word
-            index = 0;
-        }
-    }
-    getrusage(RUSAGE_SELF, &after);
-    time_check += calculate(&before, &after);
-
-    // ========= END CHECK =========
-
-    // print_trie(root);
-
-    // ========= SIZE =========
-    getrusage(RUSAGE_SELF, &before);
-    unsigned int n = size();
-    getrusage(RUSAGE_SELF, &after);
-
-    // Calculate time to determine dictionary's size
-    time_size = calculate(&before, &after);
-
-    // ========= UNLOAD =========
-    getrusage(RUSAGE_SELF, &before);
+    root = insert_trie(root, "hello");
+    root = insert_trie(root, "hi");
+    root = insert_trie(root, "teabag");
+    root = insert_trie(root, "teacan");
+    print_search(root, "tea");
+    print_search(root, "teabag");
+    print_search(root, "teacan");
+    print_search(root, "hi");
+    print_search(root, "hey");
+    print_search(root, "hello");
+    print_trie(root);
+    printf("\n");
+    root = delete_trie(root, "hello");
+    printf("After deleting 'hello'...\n");
+    print_trie(root);
+    printf("\n");
+    root = delete_trie(root, "teacan");
+    printf("After deleting 'teacan'...\n");
+    print_trie(root);
+    printf("\n");
     free_trienode(root);
-    fclose(inptr);
-    getrusage(RUSAGE_SELF, &after);
-
-    // ========= END UNLOAD=========
-
-    // Calculate time to determine dictionary's size
-    // Calculate time to unload dictionary
-    time_unload = calculate(&before, &after);
-
-    // Report benchmarks
-    printf("\nWORDS MISSPELLED:     %d\n", misspellings);
-    printf("WORDS IN DICTIONARY:  %d\n", n);
-    printf("WORDS IN TEXT:        %d\n", words);
-    printf("TIME IN load:         %.2f\n", time_load);
-    printf("TIME IN check:        %.2f\n", time_check);
-    printf("TIME IN size:         %.2f\n", time_size);
-    printf("TIME IN unload:       %.2f\n", time_unload);
-    printf("TIME IN TOTAL:        %.2f\n\n",
-           time_load + time_check + time_size + time_unload);
-
-    // Success
     return 0;
 }
 
@@ -269,6 +131,149 @@ int search_trie(TrieNode *root, char *word)
     return 0;
 }
 
+int check_divergence(TrieNode *root, char *word)
+{
+    // Checks if there is branching at the last character of word
+    // and returns the largest position in the word where branching occurs
+    TrieNode *temp = root;
+    int len = strlen(word);
+    if (len == 0)
+        return 0;
+    // We will return the largest index where branching occurs
+    int last_index = 0;
+    for (int i = 0; i < len; i++)
+    {
+        int position = word[i] - 'a';
+        if (temp->children[position])
+        {
+            // If a child exists at that position
+            // we will check if there exists any other child
+            // so that branching occurs
+            for (int j = 0; j < N; j++)
+            {
+                if (j != position && temp->children[j])
+                {
+                    // We've found another child! This is a branch.
+                    // Update the branch position
+                    last_index = i + 1;
+                    break;
+                }
+            }
+            // Go to the next child in the sequence
+            temp = temp->children[position];
+        }
+    }
+    return last_index;
+}
+
+char *find_longest_prefix(TrieNode *root, char *word)
+{
+    // Finds the longest common prefix substring of word
+    // in the Trie
+    if (!word || word[0] == '\0')
+        return NULL;
+    // Length of the longest prefix
+    int len = strlen(word);
+
+    // We initially set the longest prefix as the word itself,
+    // and try to back-tracking from the deepst position to
+    // a point of divergence, if it exists
+    char *longest_prefix = (char *)calloc(len + 1, sizeof(char));
+    for (int i = 0; word[i] != '\0'; i++)
+        longest_prefix[i] = word[i];
+    longest_prefix[len] = '\0';
+
+    // If there is no branching from the root, this
+    // means that we're matching the original string!
+    // This is not what we want!
+    int branch_idx = check_divergence(root, longest_prefix) - 1;
+    if (branch_idx >= 0)
+    {
+        // There is branching, We must update the position
+        // to the longest match and update the longest prefix
+        // by the branch index length
+        longest_prefix[branch_idx] = '\0';
+        longest_prefix = (char *)realloc(longest_prefix, (branch_idx + 1) * sizeof(char));
+    }
+
+    return longest_prefix;
+}
+
+int is_leaf_node(TrieNode *root, char *word)
+{
+    // Checks if the prefix match of word and root
+    // is a leaf node
+    TrieNode *temp = root;
+    for (int i = 0; word[i]; i++)
+    {
+        int position = (int)word[i] - 'a';
+        if (temp->children[position])
+        {
+            temp = temp->children[position];
+        }
+    }
+    return temp->is_leaf;
+}
+
+TrieNode *delete_trie(TrieNode *root, char *word)
+{
+    // Will try to delete the word sequence from the Trie only it
+    // ends up in a leaf node
+    if (!root)
+        return NULL;
+    if (!word || word[0] == '\0')
+        return root;
+    // If the node corresponding to the match is not a leaf node,
+    // we stop
+    if (!is_leaf_node(root, word))
+    {
+        return root;
+    }
+    TrieNode *temp = root;
+    // Find the longest prefix string that is not the current word
+    char *longest_prefix = find_longest_prefix(root, word);
+    // printf("Longest Prefix = %s\n", longest_prefix);
+    if (longest_prefix[0] == '\0')
+    {
+        free(longest_prefix);
+        return root;
+    }
+    // Keep track of position in the Trie
+    int i;
+    for (i = 0; longest_prefix[i] != '\0'; i++)
+    {
+        int position = (int)longest_prefix[i] - 'a';
+        if (temp->children[position] != NULL)
+        {
+            // Keep moving to the deepest node in the common prefix
+            temp = temp->children[position];
+        }
+        else
+        {
+            // There is no such node. Simply return.
+            free(longest_prefix);
+            return root;
+        }
+    }
+    // Now, we have reached the deepest common node between
+    // the two strings. We need to delete the sequence
+    // corresponding to word
+    int len = strlen(word);
+    for (; i < len; i++)
+    {
+        int position = (int)word[i] - 'a';
+        if (temp->children[position])
+        {
+            // Delete the remaining sequence
+            TrieNode *rm_node = temp->children[position];
+            temp->children[position] = NULL;
+            free_trienode(rm_node);
+        }
+    }
+    free(longest_prefix);
+    return root;
+}
+
 void print_trie(TrieNode *root)
 {
     // Prints the nodes of the trie
@@ -284,38 +289,9 @@ void print_trie(TrieNode *root)
 
 void print_search(TrieNode *root, char *word)
 {
-    // printf("Searching for %s: ", word);
+    printf("Searching for %s: ", word);
     if (search_trie(root, word) == 0)
-    {
-        // printf("Not Found\n");
-        misspellings++;
-    }
-    // else
-    // {
-    //     CORRECT_SPELLED_WORDS++;
-    //     // printf("Found!\n");
-    // }
-}
-
-// Returns number of words in dictionary if loaded, else 0 if not yet loaded
-unsigned int size(void)
-{
-    return WORDS_READ;
-}
-
-// Returns number of seconds between b and a
-double calculate(const struct rusage *b, const struct rusage *a)
-{
-    if (b == NULL || a == NULL)
-    {
-        return 0.0;
-    }
+        printf("Not Found\n");
     else
-    {
-        return ((((a->ru_utime.tv_sec * 1000000 + a->ru_utime.tv_usec) -
-                  (b->ru_utime.tv_sec * 1000000 + b->ru_utime.tv_usec)) +
-                 ((a->ru_stime.tv_sec * 1000000 + a->ru_stime.tv_usec) -
-                  (b->ru_stime.tv_sec * 1000000 + b->ru_stime.tv_usec))) /
-                1000000.0);
-    }
+        printf("Found!\n");
 }
