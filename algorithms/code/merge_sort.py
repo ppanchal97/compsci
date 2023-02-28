@@ -1,6 +1,6 @@
 import random
 
-
+# 2 pointer technique implementation
 def merge(l1, l2):
     result = []
     i = 0
