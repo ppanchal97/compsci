@@ -1,8 +1,8 @@
-## CS50 Course Notes
+## C Course Notes
 
 
 ### C Specific Language Features
-- Implements the **procedural** paradigm (imperative programming) where code is structured as a collection of functions where any given function may be called at any point during a program's execution
+- Follows the **procedural** paradigm (imperative programming) where code is structured as a collection of functions where any given function may be called at any point during a program's execution
 - Strings (char *str;) or arrays (int nums[5];) are NOT assignable. The values have to be copied to the other variable using `strcpy()` or `memcpy()`.
 - The `->` operator is an abstraction for a pointer to a variable in a struct e.g., `node->int = 1;` == `*(node).int = 1;`.
 - ALL arguments passed into functions are copied by value, unless the pointer is passed as an argument or the data type of the argument is an array or a string.

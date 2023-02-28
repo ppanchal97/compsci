@@ -1,3 +1,0 @@
-#lang racket
-
-"hello, world!"

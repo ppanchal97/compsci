@@ -1,4 +1,4 @@
-### MIT 6.0001 Course Notes
+### Python Course Notes
 
 
 ### General Knowledge
