@@ -1,24 +1,30 @@
-## C Course Notes
+# Introduction To Programming: C Course Notes
 
 
 ### C Specific Language Features
-- Follows the **procedural** paradigm (imperative programming) where code is structured as a collection of functions where any given function may be called at any point during a program's execution
-- Strings (char *str;) or arrays (int nums[5];) are NOT assignable. The values have to be copied to the other variable using `strcpy()` or `memcpy()`.
+- Follows the **procedural** paradigm (imperative programming) where code is structured as a collection of procedures where any given procedures may be called at any point during a program's execution.
+- Strings (char *str;) are NOT assignable. To modify a string variable, their values have to be copied to a separate variable using `strcpy()`.
 - The `->` operator is an abstraction for a pointer to a variable in a struct e.g., `node->int = 1;` == `*(node).int = 1;`.
-- ALL arguments passed into functions are copied by value, unless the pointer is passed as an argument or the data type of the argument is an array or a string.
+- ALL arguments passed into functions are copied by value, unless memory address is passed as a pointer pre-pended to an argument or the data type of the argument is an `array` or a `string`.
 - Use `fread()` to continuously read a pre-determined chunk of memory from a file, use `fgets()` to read a file line by line.
 - Idiomatic C code is rigorous in checking types, return values and handles all potential errors.
 
-**Data Types and Mutability**
+**Data Types and Assignability**
 
-| Immutable Data Types | Mutable Data Types |
-| -------------------- | ------------------ |
-| `char`               | `char[]`           |
-| `int`                | `int[]`            |
-| `float`              | `float[]`          |
-| `double`             | `double[]`         |
-| `enum`               | `struct`           |
-| `const`              | `pointer`          |
+
+| Data Type  | Assignable? |
+| ---------- | ----------- |
+| `Char`     | `Yes`       |
+| `Short`    | `Yes`       |
+| `Int`      | `Yes`       |
+| `Long`     | `Yes`       |
+| `Float`    | `Yes`       |
+| `Double`   | `Yes`       |
+| `Pointer`  | `Yes`       |
+| `Array`    | `No`        |
+| `Function` | `No`        |
+
+*Arrays and functions can be assigned to pointers, which are themselves assignable*
 
 *Note that the const keyword can be used to make any data type immutable, but it is not a data type itself. Additionally, while arrays are technically mutable in C, their size cannot be changed once they are declared, so they are considered immutable for practical purposes.*
 
@@ -26,7 +32,6 @@
 - Implements the object-oriented programming paradigm (imperative programming) - enables types (classes) to encapsulate data and the functions that can read and modify that data.
 - Python manages memory automatically - allocation and freeing. You cannot allocate memory dynamically on the heap. 
 - Idiomatic python code takes is lackadaisical and not as rigorous as C. `try`, `catch` and `except` are used to handle problems as they happen without the rigorous safety of C.
-- The shebang line `#!/usr/bin/env python3` when added to the top of files automatically specifies the Python interpreter and files can be run with `./FILE_NAME` if `chmod +x FILE_NAME` has been run.
 
 ### The Problem Solving Method
 1. Identify the core algorithm. e.g., ignoring all else, what do I need to do to each character in a string or how do I need to transform x into y.
@@ -39,31 +44,32 @@
 
 ### General Knowledge
 - `Machine code` - technical term to refer to binary digits. Contrasts with `source code` that humans write.
-- Side effects are consequences of function calls that can be unintended or desired. E.g., Printing to `stdout` is an example of a desired side effect, If functions have side effects of modifying state variables, the program's outcome depends on the history (order of evaluation) of these variables making understanding and debugging harder.
+- `Side effects` are consequences of function calls that can be unintended or desired. E.g., Printing to `stdout` is an example of a desired side effect, If functions have side effects of modifying state variables, the program's outcome depends on the history (order of evaluation) of these variables making understanding and debugging harder.
 - Escape sequence `\n` tells the compiler to print a blank line.
 - Preprocessor directives such as `#include <stdio.h>;` are used to declare which libraries the program needs.
     - back in the day, resources were limited and so only the required libraries and components were imported to reduce bloat.
 - `%%` - will print one percent sign, e.g., `printf("I got %i%% in my test, 99);"`
-- `%s`, `%d` etc are format specifiers / format codes, they are placeholders for variables that can be passed in later and are type dependant e.g., `%s` for `string`, `%d` for `double` etc. See https://www.tutorialspoint.com/format-specifiers-in-c.
+- `%s`, `%d` etc are `format specifiers / format codes`, they are placeholders for variables that can be passed in as arguments to `printf()` and are type dependant e.g., `%s` for `string`, `%d` for `double` etc. See https://www.tutorialspoint.com/format-specifiers-in-c.
 - The compiler analyses and the program from top to bottom, left to right.
-- Constants guard against erroneously changing a variable e.g., `const int a = 2`;
-- Do / while loops allow you to run logic until the condition in the while statement evaluates to false. E.g., running do until user enters a valid input.
+- Constants guard against erroneously changing a variable e.g., `const int a = 2;`.
+- `Do / while` loops allow you to run logic until the condition in the while statement evaluates to false. E.g., running do until user enters a valid input. These should be read as Do x until y is true e.g., Take input until input is invalid.
 - The `main` function and custom data types defined using `typedef` are normally declared at top of the file for better readability.
 
-**Loops**
+#### Loops
 - For loops are used to repeat logic until a given condition evaluates to false - similar to `while` loop logic. They can also be used to repeat logic n number of times.
-- While loops are used to execute logic until a condition evaluates to true.
+- Both `for` and `while` loops have exactly the same functionality, but differ in their syntax.
 
-**Integer Overflow & Underflow**
-- Signed `int`s can store values between 2 billion and. -2 billion on a 32 bit machine.
-- Unsigned `int`s can store values of around 4 billion. Unsigned can only store positive values as they do not have a prefix sign bit.
+#### Integer Overflow & Underflow
+- Signed `int`s (+ || -) can store values between 2 billion and. -2 billion on a 32 bit machine.
+- Unsigned `int`s can store values of around 4 billion (4294967295). Unsigned ints can only store positive values as they do not have a prefix sign bit.
 - Integers are vulnerable to overflow if the correct data type is not used for the stored value. E.g., storing too large of a value in a 32 bit signed `int`.
 - The first bit (most significant bit) denotes whether integer is positive / negative.
-- Underflow - storing a value lesser than the minimum allowed value.
+- Underflow - storing a value lesser than the minimum allowed value. This happens when the minimum value that a signed int can hold i.e., -2,147,483,648 has been decremented. 
 
-**Y2K / Year 2038 Problem**
-- Y2K - programs customarily only used the last 2 digits to represent the year property to conserve memory. E.g., 1999 = 99. In case of 2000, last 2 digits would result in 00 as the year property, causing incorrect data to be stored. Effects mitigated by raising awareness.
+#### Y2K / Year 2038 Problem
+- Y2K - old programs customarily only used the last 2 digits to represent the year property to conserve memory. E.g., 1999 = 99. In case of 2000, last 2 digits would result in 00 as the year property, causing incorrect data to be stored. Effects mitigated by raising awareness.
 - Unix time stores seconds since 1 jan 1970. **signed** 32 bit integers can store values up to 4 billion, this will be reached on 19th Jan 2038 as 4b seconds would have passed.
+- There are no universal solutions to these problems, developers must update their own systems. Embedded systems and rarely-updated software are the most vulnerable.
 
 ## Week 2 - Lecture 2 - Arrays
 
@@ -475,8 +481,19 @@ int bubble_sort(int nums[], int arr_len)
 
 ### Recursion
 - Recursion is calling a function within itself on a smaller and smaller problem space.
-- A recursive function defines a base case and a recursive step. The base case is needed to exit so a function does not run forever. The recursive step calls the function again with some new parameter.
 - The functions keep getting pushed to the call stack until the base case is triggered, then they are run one by one from last added to first and are popped off the stack in this order.
+
+#### A recursive implementation always has two parts:
+#### Base case
+Which is the simplest, smallest instance of the problem, that can’t be decomposed any further. Base cases often correspond to **emptiness** – the empty string, the empty list, the empty set, the empty tree, zero, etc.
+
+#### Recursive step
+Decomposes a larger instance of the problem into one or more simpler or smaller instances that can be solved by recursive calls, and then **recombines** the results of those sub-problems to produce the solution to the original problem.
+
+#### It’s important for the recursive step to transform the problem instance into something smaller, otherwise the recursion may never end. If every recursive step shrinks the problem, and the base case lies at the bottom, then the recursion is guaranteed to be finite.
+
+#### A recursive implementation may have more than one base case, or more than one recursive step. For example, the Fibonacci function has two base cases, n=0 and n=1.
+
 
 5 5tep process to solve any recursive problem
 1. Determine simplest input for the function (Base case) - the case where an explicit answer is provided.

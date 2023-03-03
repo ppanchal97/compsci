@@ -1,12 +1,11 @@
-### Python Course Notes
+# Introduction To Programming: Python Course Notes
 
 
 ### General Knowledge
-- Turing complete means that 6 primitives (right, left, print, scan, erase, do nothing), can compute anything that is computable.
+- Turing complete means that 6 primitives (`right`, `left`, `print`, `scan`, `erase`, `do nothing`), can compute anything that is computable.
 - Both functions and methods are used to define reusable code that can be called multiple times. However, there is a subtle difference between them: 
   - A function is a **standalone piece** of code that can be called by other parts of the program. It takes input arguments, performs some operation, and returns a value. Functions are typically defined outside of classes and can be called from any part of the program that has access to them.
   - On the other hand, a method is a function that is **associated with an object or class**. It is defined inside a class and operates on the data members of that class. A method is called on an instance of the class, and it can access and modify the state of the object it belongs to.
-  - In summary, the main difference between a function and a method is that a **function is a standalone piece of code** that operates on input arguments, while a **method is a function that is associated with an object or class** and operates on the data members of that class.
 
 ### Python Specific Notes
 - Pythonic means "Easier to Ask for Forgiveness than Permission" (EAFP) - a lackadaisical approach to programming where an operation is carried out regardless of verifying whether the inputs are correct and any exceptions are just handled along the way.
@@ -44,6 +43,14 @@
 | `str`                | `array`                |
 
 *The term "immutable" in Python refers to the fact that the value of an object cannot be changed after it is created. However, the object itself can be replaced with a new object of the same type that has a different value. For example, you can't modify a string in place, but you can assign a new string to the same variable to replace the original string.*
+
+### Immutability Demo
+```
+x = 5
+x = 10
+```
+
+In this code, the variable x is initially assigned the value 5, but if we try to assign a new value of 10 to x, we are actually creating a new integer object with a value of 10 and assigning it to x. The original integer object with a value of 5 still exists in memory, but it is no longer referenced by any variable.
 
 # Common Formulas / Axioms
 
@@ -163,7 +170,7 @@ Common use cases:
     - check for even / odd integers
     - check for prime numbers
 
-**Turing Complete Primitives**
+### Turing Complete Primitive
 **Right**: Move the Machine’s head to the right of the current square
 
 **Left**: Move the Machine’s head to the left of the current square
@@ -176,11 +183,11 @@ Common use cases:
 
 **Nothing/halt**: Do nothing
 
-**Types of knowledge**
+### Types of knowledge
 1. Declarative - statement of fact / expresses the desired end state of the system.
 2. Imperative - a series of instructions for the computer to change it's state / a recipe for computation. e.g., deducing square root of a number using guesses.
 
-**Types of computers**
+### Types of computers
 1. Fixed program - are designed to only compute one thing. e.g., calculators, Turing's Bombe.
 2. Stored program - store the data and the instructions to operate on the data in memory. Are capable of computing an infinite range of things.
 
