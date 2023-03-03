@@ -6,6 +6,7 @@ def merge(l1, l2):
     i = 0
     j = 0
 
+    # Traverse lists, compare elements and append smallest
     while i < len(l1) and j < len(l2):
         if l1[i] < l2[j]:
             result.append(l1[i])
@@ -15,11 +16,10 @@ def merge(l1, l2):
             j += 1
 
     # append remaining lists
-    # for loop implementation
-    for k in range(i, len(l1)):
-        result.append(l1[k])
+    while (i < len(l1)):
+        result.append(l1[i])
+        i += 1
 
-    # while loop implementation
     while (j < len(l2)):
         result.append(l2[j])
         j += 1
