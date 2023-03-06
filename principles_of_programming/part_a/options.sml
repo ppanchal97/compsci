@@ -35,3 +35,13 @@ fun better_max2 (xs : int list) =
             end
 
 val nums = [324,89,123,482,0,1];
+
+(* Declaring options*)
+val x = SOME 3;
+val y = NONE;
+
+(* Extracting a value from an option, raises an exception for NONE*)
+valOf x;
+
+(* Checking if a variable contains a valid option *)
+isSome x;

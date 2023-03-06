@@ -68,14 +68,28 @@
 - Are almost always recursive - as recursion is the **only way that each element in the list can be accessed.**
 - The majority of base cases for lists will check if the list is empty.
 
-### Recursion Steps
+# Recursion
 - When thinking about recursion - think about what the answer should be for the empty list and what the generalization should be for a non-empty list (typically with regards to the tail of the list).
 - Use a **Recurrence Relation** to prove that the function has a base case and a decreasing recursive step. E.g., the relation for the Fibonacci sequence is:
-
 ```
 F(0) = 0
 F(1) = 1
 F(n) = F(n-1) + F(n-2) for n > 1
+```
+- n-step Recursion or, doing something recursively n times can be achieved by modifying the input to the recursive function.
+```
+(* 
+ 6. Write a function get_nth that takes a list of strings and an int n and returns the nth element of the list where the head of the list is 1st.
+*)
+fun get_nth(strings: string list, n : int) = 
+  if null strings
+  then ""
+  else 
+          (
+                  if n = 1
+                  then hd strings
+                  else get_nth(tl strings, n-1)
+          )
 ```
 
 #### 1. Think about the base case - inputs that can’t be decomposed any further - this is usually what the function will do in case of "emptyness" - the empty string, the empty list, the empty set, the empty tree, zero, etc.
@@ -102,9 +116,13 @@ F(n) = F(n-1) + F(n-2) for n > 1
 #### Inequality
 - In C, Python `!=` is used to test inequality. In SML this becomes `<>`.
 
+### Expressions and Operators
 
-
-#### `andalso`
+1. e1 andalso e2 is logical-and: It evaluates e2 only if e1 evaluates to true. The result is true if e1
+and e2 evaluate to true. Naturally, e1 and e2 must both have type bool and the entire expression
+also has type bool. In many languages, such expressions are written e1 && e2, but that is not the ML
+syntax, nor is e1 and e2 (but and is a keyword we will encounter later for a different purpose). Using
+e1 andalso e2 is generally better style than the equivalent if e1 then e2 else false.
 
 e.g.,
 ```
@@ -116,3 +134,25 @@ val x = if (z = 2) andalso (4 + 5 < 10)
 
 - The semantics of `andalso` dictate that given e1 andalso e2, you evaluate e2 only if e1 evaluates to true; otherwise, the full e1 andalso e2 expression evaluates to false. Therefore, in this case, since z is not equal to 2, the second part of the andalso expression, 4 + 5 < 10), is not evaluated.
 - `andalso` is interchangeable with the `if / then / else` construct. But it is better style to use the concise `andalso` and `orelse` statements.
+`~
+2. e1 `orelse` e2 is logical-or: It evaluates e2 only if e1 evaluates to false. The result is true if e1
+or e2 evaluates to true. Naturally, e1 and e2 must both have type bool and the entire expression
+also has type bool. In many languages, such expressions are written e1 || e2, but that is not
+the ML syntax, nor is e1 or e2. Using e1 `orelse` e2 is generally better style than the equivalent
+if e1 then true else e2.
+
+3. `not e` is logical-negation. not is just a provided function of type bool->bool that we could have
+defined ourselves as fun not x = if x then false else true. In many languages, such expressions
+are written !e, but in ML the ! operator means something else (related to mutable variables, which
+we will not use).
+
+3. You can compare many values, including integers, for equality using e1 = e2.
+
+4. Instead of writing `not (e1 = e2)` to see if two numbers are different, better style is e1 <> e2. In many
+languages, the syntax is e1 != e2, whereas ML’s <> can be remembered as, “less than or greater than.”
+
+5. The other arithmetic comparisons have the same syntax as in most languages: `>, <, >=, <=`.
+
+6. Subtraction is written `e1 - e2`, but it must take two operands, so you cannot just write - e for
+negation. For negation, the correct syntax is ~ e, in particular negative numbers are written like ~7,
+not -7. Using ~e is better style than 0 - e, but equivalent for integers.
